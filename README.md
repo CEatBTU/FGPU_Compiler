@@ -6,13 +6,19 @@ In this repository you can find the LLVM compiler for the FGPU inside a docker. 
 ## Instructions
 Install docker in your system.
 
-        git clone this repository.
-    
-        cd FGPU_Compiler/kernel
+        git clone this repository
+
+        cd FGPU_Compiler/compiler
+
+        docker build -t fgpu_compiler .
+
+The compiler binaries will then be available inside the container in the /llvm/llvm-3.7.1.build/bin folder.
+
+        cd ../kernel
 
         docker run -v $(pwd):/llvm/kernels -it fgpu_compiler 
 
-This will start the docker instance
+This will create a directory /llvm/kernels inside the container and mount the current directory over there, and then run the container into interactive mode (i.e., you get a shell inside the container).
 
         cd to llvm/kernels
 
