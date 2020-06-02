@@ -1,0 +1,15 @@
+
+compiler_outputs/div_hard_float.bin:	file format ELF32-fgpu
+
+Disassembly of section .text:
+div_hard_float:
+       0:	22 00 00 a8 	lp	r2, 1
+       4:	43 00 00 a8 	lp	r3, 2
+       8:	04 00 00 a8 	lp	r4, 0
+       c:	05 00 00 a0 	lid	r5, 0
+      10:	06 00 00 a1 	wgoff	r6, 0
+      14:	c1 14 00 10 	add	r1, r6, r5
+      18:	24 10 00 74 	lw	r4, r4[r1]
+      1c:	83 0c 00 c2 	fdiv	r3, r4, r3
+      20:	23 08 00 7c 	sw	r3, r2[r1]
+      24:	00 00 00 92 	ret

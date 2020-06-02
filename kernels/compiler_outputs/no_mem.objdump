@@ -1,0 +1,6 @@
+
+compiler_outputs/no_mem.bin:	file format ELF32-fgpu
+
+Disassembly of section .text:
+no_mem:
+       0:	00 00 00 92 	ret

@@ -1,0 +1,3 @@
+#define LUDECOMPOSITION_LEN                 898
+#define LUDECOMPOSITION_L_PASS_POS          853
+#define LUDECOMPOSITION_U_PASS_POS          876

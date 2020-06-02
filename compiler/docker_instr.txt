@@ -1,0 +1,15 @@
+cd to kernel
+
+docker run -v $(pwd):/llvm/kernels -it fgpu_compiler
+
+cd to llvm/kernels
+
+./compile.sh or ./compile_and_log.sh 
+
+
+
+docker container ls -a -s
+
+
+
+docker container rm CONTID
