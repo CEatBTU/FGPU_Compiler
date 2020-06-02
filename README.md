@@ -12,7 +12,11 @@ Install docker in your system.
 
         docker build -t fgpu_compiler .
 
-The compiler binaries will then be available inside the container in the /llvm/llvm-3.7.1.build/bin folder.
+Alternatively you can pull an already built docker image (this haven't been tested enough times to make it the default option).
+
+        docker pull munozher/fgpu_compiler
+
+With the image already built, you can start it:
 
         cd ../kernel
 
