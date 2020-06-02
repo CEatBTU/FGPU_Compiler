@@ -18,9 +18,11 @@ Alternatively you can pull an already built docker image (this haven't been test
 
 With the image already built, you can start it:
 
-        cd ../kernel
+        cd ../kernels
 
         docker run -v $(pwd):/llvm/kernels -it fgpu_compiler 
+
+NOTE: if you pulled the built image, the name of the image in the last command has to change from _fgpu_compiler_ to _munozher/fgpu_compiler_
 
 This will create a directory /llvm/kernels inside the container and mount the current directory over there, and then run the container into interactive mode (i.e., you get a shell inside the container).
 
