@@ -1,8 +1,10 @@
+bsdmainutils
 cmake
 ctags
 g++
 gawk
 gcc-multilib
+gdb
 python
 tar
 wget

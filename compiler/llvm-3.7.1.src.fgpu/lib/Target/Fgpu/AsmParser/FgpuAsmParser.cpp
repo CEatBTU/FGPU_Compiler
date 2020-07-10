@@ -431,7 +431,7 @@ bool FgpuAsmParser::ParseOperand(OperandVector &Operands, StringRef Mnemonic) {
 
     SMLoc E = SMLoc::getFromPointer(Parser.getTok().getLoc().getPointer() - 1);
 
-    assert(false);
+    //assert(false);
     MCSymbol *Sym = getContext().getOrCreateSymbol("r" + Identifier);
 
     // Otherwise create a symbol ref.
