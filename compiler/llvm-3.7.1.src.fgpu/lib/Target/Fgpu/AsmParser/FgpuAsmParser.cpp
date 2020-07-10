@@ -404,22 +404,22 @@ bool FgpuAsmParser::ParseOperand(OperandVector &Operands, StringRef Mnemonic) {
     // Parser.Lex(); // Eat dollar token.
     // parse register operand
     if (!tryParseRegisterOperand(Operands, Mnemonic)) {
-      if (getLexer().is(AsmToken::LParen)) {
+      if (getLexer().is(AsmToken::LBrac)) {
         // check if it is indexed addressing operand
-        Operands.push_back(FgpuOperand::CreateToken("(", S));
-        Parser.Lex(); // eat parenthesis
-        if (getLexer().isNot(AsmToken::Dollar))
-          return true;
+        Operands.push_back(FgpuOperand::CreateToken("[", S));
+        Parser.Lex(); // eat Brac
+        //if (getLexer().isNot(AsmToken::Dollar))
+        //  return true;
 
-        Parser.Lex(); // eat dollar
+        //Parser.Lex(); // eat dollar
         if (tryParseRegisterOperand(Operands, Mnemonic))
           return true;
 
-        if (!getLexer().is(AsmToken::RParen))
+        if (!getLexer().is(AsmToken::RBrac))
           return true;
 
         S = Parser.getTok().getLoc();
-        Operands.push_back(FgpuOperand::CreateToken(")", S));
+        Operands.push_back(FgpuOperand::CreateToken("]", S));
         Parser.Lex();
       }
       return false;
