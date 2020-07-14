@@ -242,13 +242,21 @@ let isCodeGenOnly = 1;
 //  let isPseudo = 0;
 //  let mayLoad = 1;
 //}
-class Load_Frame<bits<8> op, string instr_asm, SDNode OpNode,
-                  Operand Od, PatLeaf imm_type> :
+//class Load_Frame<bits<8> op, string instr_asm, SDNode OpNode,  Operand Od, PatLeaf imm_type>
+//       : FRRI<op, (outs ALURegs:$rd), (ins ALURegs:$rs, Od:$imm14),
+//     !strconcat(instr_asm, "\t$rd, $rs, $imm14"),
+//     [(set ALURegs:$rd, (OpNode ALURegs:$rs, imm_type:$imm14))], IIAlu> {
+//  let isReMaterializable = 1;
+//}
+
+class Load_Frame<bits<8> op, string instr_asm, SDNode OpNode,  Operand Od, PatLeaf imm_type> :
   FRRI<op, (outs ALURegs:$rd), (ins ALURegs:$rs, Od:$imm14),
-     !strconcat(instr_asm, "\t$rd, $rs[$imm14]"),
+     !strconcat(instr_asm, "\t$rd, $rs, $imm14"),
      [(set ALURegs:$rd, (OpNode ALURegs:$rs, imm_type:$imm14))], IIAlu> {
   let isReMaterializable = 1;
+  let mayLoad = 1;
 }
+
 class Load_Byte<bits<8> op, string instr_asm, PatFrag OpNode, RegisterClass RC>
             : FRRR<op, (outs RC:$rd), (ins RC:$rs, RC:$rt),
             !strconcat(instr_asm, "\t$rd, $rt[$rs]"),
@@ -271,13 +279,13 @@ class Load_Word<bits<8> op, string instr_asm, PatFrag OpNode, RegisterClass RC>
   let mayLoad = 1;
 }
 
-class Store_Frame<bits<8> op, string instr_asm, PatFrag OpNode, RegisterClass RC>
-            : FRRI_Stack<op, (outs), (ins RC:$rd, mem:$addr),
-            !strconcat(instr_asm, "\t$rd, $addr"),
-            [(OpNode RC:$rd, frameAddr:$addr)], IIStore>{
+class Store_Frame<bits<8> op, string instr_asm, SDNode OpNode,  Operand Od, PatLeaf imm_type> :
+  FRRI<op, (outs ALURegs:$rd), (ins ALURegs:$rs, Od:$imm14),
+     !strconcat(instr_asm, "\t$rd, $rs, $imm14"),
+     [(set ALURegs:$rd, (OpNode ALURegs:$rs, imm_type:$imm14))], IIAlu> {
   let isPseudo = 0;
-  let mayStore = 1;
 }
+
 class Store_Byte<bits<8> op, string instr_asm, PatFrag OpNode, RegisterClass RC>
             : FRRR<op, (outs), (ins RC:$rd, RC:$rs, RC:$rt),
             !strconcat(instr_asm, "\t$rd, $rt[$rs]"),
@@ -358,8 +366,7 @@ def ADJCALLSTACKUP   : FgpuPseudo<(outs), (ins uimm14:$amt1, uimm14:$amt2),
 def LW : Load_Word<0x74, "lw", load_a, ALURegs>;
 def LH : Load_Half<0x72, "lh", load_a, ALURegs>;
 def LB : Load_Byte<0x71, "lb", load_a, ALURegs>;
-//def LLWI : Load_Frame<0xD4, "llwi", load_a, ALURegs>;
-def LLWI : Load_Frame<0xD4, "llwi", add, simm14, immSExt14>;
+def LLWI    : Load_Frame<0xD4, "llwi", add, simm14, immSExt14>;
 // map load without index, i.e. lw rd, rt[0]
 def : Pat<(load_a ALURegs:$in), (LW R0,ALURegs:$in )>;
 def : Pat<( f32 (load_a ALURegs:$in)), (COPY_TO_REGCLASS (LW R0,ALURegs:$in), FloatRegs)>;
@@ -377,7 +384,7 @@ def : Pat<(i32 (bitconvert (f32 FloatRegs:$Xn))), (COPY_TO_REGCLASS FloatRegs:$X
 def SW : Store_Word<0x7C, "sw", store_a, ALURegs>;
 def SH : Store_Half<0x7A, "sh", truncstorei16, ALURegs>;
 def SB : Store_Byte<0x79, "sb", truncstorei8, ALURegs>;
-def LSWI : Store_Frame<0xDC, "lswi", store_a, ALURegs>;
+def LSWI : Store_Frame<0xDC, "lswi", add, simm14, immSExt14>;
 // map store without index, i.e. sw rd, rt[0]
 def : Pat<(store_a ALURegs:$rd, ALURegs:$addr), (SW ALURegs:$rd, R0, ALURegs:$addr)>;
 def : Pat<(store_a (f32 FloatRegs:$rd), (add ALURegs:$rt, (shl ALURegs:$rs, imm_eq_2))),
