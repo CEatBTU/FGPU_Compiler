@@ -15,4 +15,6 @@ COPY llvm-3.7.1.src.fgpu /llvm/llvm-3.7.1.src.fgpu
 
 RUN bash ./scripts/build_compiler.sh
 
-WORKDIR /
+# Cleanup
+RUN rm -rf /llvm/llvm-3.7.1.src.fgpu
+RUN export PATH=$PATH:/llvm/llvm-3.7.1.build/bin
